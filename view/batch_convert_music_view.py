@@ -15,10 +15,25 @@ class BatchConvertMusicView(QWidget):
         构造函数
         """
         super().__init__()
-        self.setWindowTitle("批量转换网易云ncm文件")
+        # self.setWindowTitle("批量转换网易云ncm文件")
         self.setMinimumSize(800, 600)
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         # self.setWindowIcon(QIcon(r"res/time04.ico"))
         self.setup_ui()
+        self.old_pos = None  # 记录鼠标位置
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.old_pos = event.globalPosition().toPoint()
+
+    def mouseMoveEvent(self, event):
+        if self.old_pos is not None:
+            delta = event.globalPosition().toPoint() - self.old_pos
+            self.move(self.x() + delta.x(), self.y() + delta.y())
+            self.old_pos = event.globalPosition().toPoint()
+
+    def mouseReleaseEvent(self, event):
+        self.old_pos = None
 
     def setup_ui(self):
         """
@@ -31,10 +46,18 @@ class BatchConvertMusicView(QWidget):
         main_layout.setSpacing(15)
 
         # 标题部分
+        title_layout = QHBoxLayout()
         title = QLabel("批量文件解码工具")
         title.setStyleSheet("font-size: 18px; font-weight: bold;")
+        # 关闭按钮
+        self.exit_btn = QPushButton("退出")
+        self.exit_btn.setFixedSize(60, 30)
+        self.exit_btn.setStyleSheet("background-color: #eeeeee; color: red; border: none; font-size: 14px; font-weight: bold;")
+        title_layout.addWidget(title)
+        title_layout.addWidget(self.exit_btn)
+        main_layout.addLayout(title_layout)
+
         subtitle = QLabel("支持多种编码格式转换，快速批量处理")
-        main_layout.addWidget(title)
         main_layout.addWidget(subtitle)
 
         # 文件拖拽区域

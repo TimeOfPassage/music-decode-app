@@ -15,6 +15,7 @@ class BatchConvertMusicController:
         self.view.browse_btn.clicked.connect(self.select_output_path)
         self.view.clear_btn.clicked.connect(self.clear_filelist)
         self.view.start_btn.clicked.connect(self.start_convert)
+        self.view.exit_btn.clicked.connect(self.exit_app)
         self.view.show()
         self.convert_music = ConvertMusic()
         self.convert_music.refresh_signal.connect(self.refresh_view)
@@ -31,6 +32,9 @@ class BatchConvertMusicController:
         # match: list[QListWidgetItem] = self.view.file_list.findItems(f, Qt.MatchFlag.MatchExactly)
         # if match:
         #     self.view.file_list.takeItem(self.view.file_list.row(match[0]))
+
+    def exit_app(self):
+        self.view.close()
 
     def start_convert(self):
         if self.convert_music.total <= 0:
